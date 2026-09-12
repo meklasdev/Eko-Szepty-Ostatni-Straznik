@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://main_scene_001"]
+
+[ext_resource type="PackedScene" path="res://scenes/Player.tscn" id="1_player"]
+
+[ext_resource type="PackedScene" path="res://scenes/Enemy.tscn" id="2_enemy"]
+
+[ext_resource type="PackedScene" path="res://scenes/Sanctuary.tscn" id="3_sanctuary"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Players" type="Node2D" parent="."]
+
+[node name="Player1" parent="Players" instance=ExtResource("1_player")]
+position = Vector2(200, 300)
+player_id = 1
+
+[node name="Player2" parent="Players" instance=ExtResource("1_player")]
+position = Vector2(250, 300)
+player_id = 2
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="Enemy1" parent="Enemies" instance=ExtResource("2_enemy")]
+position = Vector2(600, 300)
+
+[node name="Sanctuaries" type="Node2D" parent="."]
+
+[node name="Sanctuary1" parent="Sanctuaries" instance=ExtResource("3_sanctuary")]
+position = Vector2(400, 150)
