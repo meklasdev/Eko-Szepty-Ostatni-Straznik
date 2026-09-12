@@ -1,12 +1,13 @@
 [gd_scene load_steps=5 format=3 uid="uid://main_scene_001"]
 
 [ext_resource type="PackedScene" path="res://scenes/Player.tscn" id="1_player"]
-
 [ext_resource type="PackedScene" path="res://scenes/Enemy.tscn" id="2_enemy"]
-
 [ext_resource type="PackedScene" path="res://scenes/Sanctuary.tscn" id="3_sanctuary"]
+[ext_resource type="PackedScene" path="res://scenes/HUD.tscn" id="4_hud"]
 
 [node name="Main" type="Node2D"]
+
+[node name="HUD" parent="." instance=ExtResource("4_hud")]
 
 [node name="Players" type="Node2D" parent="."]
 
