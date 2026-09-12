@@ -23,9 +23,11 @@ func _physics_process(delta: float) -> void:
 		State.PATROL:
 			process_patrol(delta)
 			check_for_players()
+			check_player_collision()
 		State.CHASE:
 			process_chase(delta)
 			check_for_players()
+			check_player_collision()
 		State.STUNNED:
 			process_stunned(delta)
 
@@ -95,6 +97,35 @@ func check_for_players() -> void:
 		if current_state == State.CHASE:
 			current_state = State.PATROL
 			target_player = null
+
+func check_player_collision() -> void:
+	if current_state == State.STUNNED:
+		return
+
+	for i in get_slide_collision_count():
+		var collision := get_slide_collision(i)
+		var collider = collision.get_collider()
+		if collider is Player:
+			collider.current_energy = 0.0
+			Events.player_died.emit(collider.player_id)
+			_check_game_over()
+			return
+
+	if target_player and is_instance_valid(target_player) and current_state == State.CHASE:
+		if global_position.distance_to(target_player.global_position) < 25.0:
+			target_player.current_energy = 0.0
+			Events.player_died.emit(target_player.player_id)
+			_check_game_over()
+
+func _check_game_over() -> void:
+	var players := get_tree().get_nodes_in_group("Players")
+	var all_dead := true
+	for p in players:
+		if p is Player and p.current_energy > 0.0:
+			all_dead = false
+			break
+	if all_dead:
+		Events.game_over.emit()
 
 func stun(duration: float) -> void:
 	stun_timer = duration

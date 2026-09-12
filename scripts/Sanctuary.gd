@@ -21,7 +21,9 @@ func _physics_process(delta: float) -> void:
 			var interact_action := "p%d_interact" % body.player_id
 			if Input.is_action_pressed(interact_action):
 				# Transfer energy from player to sanctuary
-				var transfer := charge_rate * delta
+				# Player 2 (Moon) charges 2x faster / more efficiently
+				var efficiency := 2.0 if body.player_id == 2 else 1.0
+				var transfer := charge_rate * efficiency * delta
 				if body.current_energy > transfer:
 					body.current_energy -= transfer
 					charge_amount += transfer
@@ -29,4 +31,15 @@ func _physics_process(delta: float) -> void:
 						charge_amount = max_charge
 						is_fully_charged = true
 						Events.sanctuary_charged.emit(sanctuary_id)
+						_check_all_sanctuaries_charged()
 						break
+
+func _check_all_sanctuaries_charged() -> void:
+	var sanctuaries := get_tree().get_nodes_in_group("Sanctuaries")
+	var all_charged := true
+	for s in sanctuaries:
+		if s is Sanctuary and not s.is_fully_charged:
+			all_charged = false
+			break
+	if all_charged:
+		Events.game_won.emit()
